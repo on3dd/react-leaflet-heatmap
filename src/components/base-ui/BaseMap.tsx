@@ -1,7 +1,16 @@
 import React from 'react';
-import { Map, MapProps, TileLayer, Marker, Popup, LayersControl, FeatureGroup } from 'react-leaflet';
+import {
+  Map,
+  MapProps,
+  TileLayer,
+  Marker, Popup,
+  LayersControl,
+  FeatureGroup
+} from 'react-leaflet';
 import HeatmapLayer from 'react-leaflet-heatmap-layer';
 import styled from 'styled-components';
+
+import PointsArr from '../../types/pointsArr';
 
 const StyledMap = styled(Map) <MapProps>`
   height: inherit;
@@ -19,22 +28,16 @@ const state = {
   limitAddressPoints: true,
 }
 
-const gradient = {
-  0.1: '#89BDE0', 0.2: '#96E3E6', 0.4: '#82CEB6',
-  0.6: '#FAF3A5', 0.8: '#F5D98B', '1.0': '#DE9A96'
-};
+type BaseMapProps = {
+  points?: PointsArr | null,
+  center?: [number, number],
+}
 
-const addressPoints = [
-  [43.116686, 131.888419, 10],
-  [43.132588, 131.905581, 10],
-  [43.115483, 131.908787, 10]
-];
-
-const BaseMap = () => {
+const BaseMap = ({ points = [] }: BaseMapProps) => {
   const renderMap = () => {
     const position: [number, number] = [state.lat, state.lng];
     return (
-      <StyledMap center={position} zoom={state.zoom}>
+      <StyledMap center={[0, 0]} zoom={state.zoom}>
         <LayersControl>
           <LayersControl.BaseLayer name="Base" checked>
             <TileLayer
@@ -46,14 +49,14 @@ const BaseMap = () => {
           <LayersControl.Overlay name="Heatmap" checked>
             <FeatureGroup color="purple">
               <HeatmapLayer
-                gradient={gradient}
-                points={addressPoints}
-                max={state.max}
+                fitBoundsOnLoad
+                fitBoundsOnUpdate
+                points={points}
                 radius={state.radius}
                 minOpacity={state.minOpacity}
-                longitudeExtractor={m => m[1]}
-                latitudeExtractor={m => m[0]}
-                intensityExtractor={m => m[2]}
+                longitudeExtractor={(m: PointsArr) => m[1]}
+                latitudeExtractor={(m: PointsArr) => m[0]}
+                intensityExtractor={(m: PointsArr) => m[2]}
               />
             </FeatureGroup>
           </LayersControl.Overlay>

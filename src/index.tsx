@@ -1,20 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components'
+import { Provider } from 'react-redux';
 
 import App from './App';
+import store from './store';
 import * as serviceWorker from './serviceWorker';
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-  }
-`
+import GlobalStyle from './components/GlobalStyle';
 
 ReactDOM.render(
   <React.StrictMode>
     <GlobalStyle />
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
