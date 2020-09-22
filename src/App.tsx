@@ -9,6 +9,18 @@ import RootState from './types/rootState';
 import BaseMap from './components/base-ui/BaseMap';
 import BaseSpinner from './components/base-ui/BaseSpinner';
 
+const initialState = {
+  lat: 0,
+  lng: 0,
+  zoom: 1.5,
+  radius: 30,
+  blur: 8,
+  max: 3,
+  maxZoom: 18,
+  minOpacity: 0.25,
+  limitAddressPoints: true,
+}
+
 const Div = styled.div`
   margin: 0;
   padding: 0;
@@ -27,7 +39,7 @@ const App = () => {
   return (
     <Div className="app">
       {points.isFetching && <BaseSpinner loading={points.isFetching} />}
-      <BaseMap points={points.data} />
+      <BaseMap points={points.data} {...initialState} />
     </Div>
   );
 }

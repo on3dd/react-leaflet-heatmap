@@ -17,27 +17,23 @@ const StyledMap = styled(Map) <MapProps>`
   width: inherit;
 `;
 
-const state = {
-  lat: 43.1332,
-  lng: 131.9113,
-  zoom: 12,
-  radius: 25,
-  blur: 8,
-  max: 1,
-  minOpacity: 0.1,
-  limitAddressPoints: true,
-}
-
 type BaseMapProps = {
+  lat?: number,
+  lng?: number,
+  zoom?: number,
+  radius?: number,
+  blur?: number,
+  max?: number,
+  minOpacity?: number,
+  limitAddressPoints?: boolean,
   points?: PointsArr | null,
-  center?: [number, number],
 }
 
-const BaseMap = ({ points = [] }: BaseMapProps) => {
+const BaseMap = ({ points = [], ...props }: BaseMapProps) => {
   const renderMap = () => {
-    const position: [number, number] = [state.lat, state.lng];
+    const position: [number, number] = [props.lat || 0, props.lng || 0];
     return (
-      <StyledMap center={[0, 0]} zoom={state.zoom}>
+      <StyledMap center={position} zoom={props.zoom}>
         <LayersControl>
           <LayersControl.BaseLayer name="Base" checked>
             <TileLayer
@@ -52,32 +48,15 @@ const BaseMap = ({ points = [] }: BaseMapProps) => {
                 fitBoundsOnLoad
                 fitBoundsOnUpdate
                 points={points}
-                radius={state.radius}
-                minOpacity={state.minOpacity}
-                longitudeExtractor={(m: PointsArr) => m[1]}
-                latitudeExtractor={(m: PointsArr) => m[0]}
-                intensityExtractor={(m: PointsArr) => m[2]}
+                radius={props.radius}
+                minOpacity={props.minOpacity}
+                longitudeExtractor={(el: PointsArr) => el[1]}
+                latitudeExtractor={(el: PointsArr) => el[0]}
+                intensityExtractor={(el: PointsArr) => el[2]}
               />
             </FeatureGroup>
           </LayersControl.Overlay>
-
-          <LayersControl.Overlay name="Marker">
-            <FeatureGroup color="purple">
-              <Marker position={position} >
-                <Popup>
-                  <span>A pretty CSS3 popup.<br /> Easily customizable. </span>
-                </Popup>
-              </Marker>
-            </FeatureGroup>
-          </LayersControl.Overlay>
         </LayersControl>
-
-
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
       </StyledMap>
     )
   }

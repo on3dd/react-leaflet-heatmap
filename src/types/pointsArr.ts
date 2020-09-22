@@ -1,3 +1,5 @@
-type PointsArr = [number, number, number | null][];
+import Point from './point';
+
+type PointsArr = Point[];
 
 export default PointsArr;
